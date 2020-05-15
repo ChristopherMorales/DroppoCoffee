@@ -83,8 +83,8 @@ include "conection.php";
                 <select name="sortList" id="sortList" value = "highest">
                     <option value='highest'>Price: Highest First</option>
                     <option value='lowest'>Price: Lowest First</option> 
-                    <option value='AtoZ'>Name: A to Z</option> 
-                    <option value='ZtoA'>Name: Z to A</option> 
+                    <option value='AtoZ'>Brand: A to Z</option> 
+                    <option value='ZtoA'>Brand: Z to A</option> 
                 </select>
                 <input type="submit" value="sort" name ="sortBtn"/>
             </form> 
@@ -102,29 +102,29 @@ include "conection.php";
         if ($selected == 'highest')
         {
             $get_items = "
-            SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url  FROM product p, brand b, weight w, grain g
-            WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1 
+            SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url  FROM product p, brand b, weight w, grain g
+            WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1 
             ORDER BY `p`.`sale_price`  DESC";
         }
         else if ($selected == 'lowest')
         {
                         $get_items = "
-            SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url  FROM product p, brand b, weight w, grain g
-            WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1 
+            SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url  FROM product p, brand b, weight w, grain g
+            WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1 
             ORDER BY `p`.`sale_price` ASC";
         }
         else if($selected == 'AtoZ')
         {
             $get_items = "
-            SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url  FROM product p, brand b, weight w, grain g
-            WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1
+            SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url  FROM product p, brand b, weight w, grain g
+            WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1
             ORDER BY b.brand_name ASC";
         }
         else if($selected == 'ZtoA')
         {
             $get_items = "
-            SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url  FROM product p, brand b, weight w, grain g
-            WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1
+            SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url  FROM product p, brand b, weight w, grain g
+            WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1
             ORDER BY b.brand_name DESC";
         }
             
@@ -178,7 +178,7 @@ include "conection.php";
 											</div>
 											<div class='product-body'>
 												<h3 class='product-price'>Price: $$item_price</h3>
-												<h2 class='product-name'><a href='shopProbar.php?item_id=$item_id'>$item_name</a></h2>
+												<h2 class='product-name'><a href='product-single.php?item_id=$item_id'>$item_name</a></h2>
 												<div class='product-btns'>
 													<form action='cartPrueba.php' method='post'>
 						<input type='hidden' name='cart_pid' id='cart_pid' value='$item_id'/>
@@ -198,20 +198,21 @@ include "conection.php";
 }
     else
     {
-        if(isset($_POST['submit-search']))
+        if(isset($_POST['submit-search']) AND $_POST['search'] != "")
         {
             /* $search = mysqli_real_escape_string($con, $_POST['search']);
             echo " Search: $search";
-            $sql = "SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url  FROM product p, brand b, weight w, grain g
-            WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1 AND image_url IS NOT NULL AND
+            $sql = "SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url  FROM product p, brand b, weight w, grain g
+            WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1 AND image_url IS NOT NULL AND
             brand_name LIKE '%$search%' OR weight_oz LIKE '%$search%' OR description LIKE '%$search%' "; */
 
         $search = mysqli_real_escape_string($con, $_POST['search']);
             
         echo " Search Result: $search";
-                $sql = "SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url  FROM product p, brand b, weight w, grain g
-                    WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1 AND
-                    brand_name LIKE '%$search%' OR weight_oz LIKE '%$search%' OR description LIKE '%$search%' ";
+        
+                $sql = "SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url  FROM product p, brand b, weight w, grain g
+                    WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1 AND
+                    brand_name LIKE '%$search%' OR weight_oz LIKE '%$search%' OR description LIKE '%$search%' AND image_url IS NOT NULL";
     
             $result = mysqli_query($con, $sql);
     
@@ -227,6 +228,7 @@ include "conection.php";
                     $item_pic = $row_items['image_url'];
                     $item_remain = $row_items['quantity_stock'];
                     $item_description = $row_items['description'];
+                    $item_weight = $row_items['weight_oz'];
     
                 if($item_remain < 1)
                 {
@@ -241,9 +243,9 @@ include "conection.php";
                                                         </div>
                                                         <div class='product-body'>
                                                             <h3 class='product-price'>Price: $$item_price</h3>
-                                                            <h2 class='product-name'><a href='shopProbar.php?item_id=$item_id'>$item_name</a></h2>
+                                                            <h2 class='product-name'><a href='shopProbar.php?item_id=$item_id'>$item_name, $item_weight oz</a></h2>
                                                             <div class='product-btns'>
-                                                                <form action='shopProbar.php?item_id=$item_id' method='post'>
+                                                                <form action='product-single.php?item_id=$item_id' method='post'>
                                     <input type='hidden' name='cart_pid' id='cart_pid' value='$item_id'/>
                                     <button type='submit' class='btn btn-danger'><i class='fa fa-shopping-cart'></i> Out of Stock</button>
                                     </form>
@@ -265,7 +267,7 @@ include "conection.php";
                                                         </div>
                                                         <div class='product-body'>
                                                             <h3 class='product-price'>Price: $$item_price</h3>
-                                                            <h2 class='product-name'><a href='shopProbar.php?item_id=$item_id'>$item_name</a></h2>
+                                                            <h2 class='product-name'><a href='product-single.php?item_id=$item_id'>$item_name, $item_weight oz</a></h2>
                                                             <div class='product-btns'>
                                                                 <form action='cartPrueba.php' method='post'>
                                     <input type='hidden' name='cart_pid' id='cart_pid' value='$item_id'/>
@@ -285,8 +287,8 @@ include "conection.php";
                 else
                 {
     
-                $sql = "SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url  FROM product p, brand b, weight w, grain g
-                WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1 AND image_url IS NOT NULL AND
+                $sql = "SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url  FROM product p, brand b, weight w, grain g
+                WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1 AND image_url IS NOT NULL AND
                 brand_name LIKE '%$search%' ";
     
                     $result = mysqli_query($con, $sql);
@@ -297,6 +299,9 @@ include "conection.php";
                         $item_price = $row['sale_price'];
                         $item_pic = $row['image_url'];
                         $item_remain = $row['quantity_stock'];
+                        $item_weight = $row['weight_oz'];
+
+
     
     
                 if($item_remain < 1)
@@ -312,9 +317,9 @@ include "conection.php";
                                 </div>
                                 <div class='product-body'>
                                 <h3 class='product-price'>Price: $$item_price</h3>
-                                <h2 class='product-name'><a href='shopProbar.php?item_id=$item_id'>$item_name</a></h2>
+                                <h2 class='product-name'><a href='shopProbar.php?item_id=$item_id'>$item_name, $item_weight oz</a></h2>
                                 <div class='product-btns'>
-                                    <form action='shopProbar.php?item_id=$item_id' method='post'>
+                                    <form action='product-single.php?item_id=$item_id' method='post'>
                     <input type='hidden' name='cart_pid' id='cart_pid' value='$item_id'/>
                     <button type='submit' class='btn btn-danger'><i class='fa fa-shopping-cart'></i> Out of Stock</button>
                     </form>
@@ -336,7 +341,7 @@ include "conection.php";
                                 </div>
                                 <div class='product-body'>
                                 <h3 class='product-price'>Price: $$item_price</h3>
-                                <h2 class='product-name'><a href='shopProbar.php?item_id=$item_id'>$item_name</a></h2>
+                                <h2 class='product-name'><a href='product-single.php?item_id=$item_id'>$item_name, $item_weight oz</a></h2>
                                 <div class='product-btns'>
                                     <form action='cartPrueba.php' method='post'>
                     <input type='hidden' name='cart_pid' id='cart_pid' value='$item_id'/>
@@ -353,13 +358,13 @@ include "conection.php";
               
         }
                 }
-            }
+            } 
             else
             {
                 echo "There are no results matching your search! ";
 
-                $sql = "SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url  FROM product p, brand b, weight w, grain g
-                WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1 ";
+                $sql = "SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url  FROM product p, brand b, weight w, grain g
+                WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1 AND image_url IS NOT NULL";
     
                     $result = mysqli_query($con, $sql);
                     while ($row=mysqli_fetch_array($result) )
@@ -380,7 +385,7 @@ include "conection.php";
                                 </div>
                                 <div class='product-body'>
                                 <h3 class='product-price'>Price: $$item_price</h3>
-                                <h2 class='product-name'><a href='shopProbar.php?item_id=$item_id'>$item_name</a></h2>
+                                <h2 class='product-name'><a href='product-single.php?item_id=$item_id'>$item_name</a></h2>
                                 <div class='product-btns'>
                                     <form action='cartPrueba.php' method='post'>
                     <input type='hidden' name='cart_pid' id='cart_pid' value='$item_id'/>

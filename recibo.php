@@ -2,19 +2,8 @@
 include "conection.php";
 session_start();
 
-//$ship_address = $_POST['firstname'] . " " . $_POST['address'] . " " . $_POST['city'] . " " . $_POST['state'] . " " . $_POST['zip'];
+$ship_address = $_POST['firstname'] . " " . $_POST['address'] . " " . $_POST['city'] . " " . $_POST['state'] . " " . $_POST['zip'];
 
-/* $user = $_SESSION['email'];
-
-$get_cust = "select First_Name,Middle_Name,Last_Name,Email,customer_id, Street_Name,Apt_Number,City,State,Zip,Address_Type from Customer where Email='$user'";
-
-$run_cust = mysqli_query($con,$get_cust);
-
-$row_cust = mysqli_fetch_array($run_cust); */
-
-//$cust_id = $row_cust['customer_id'];
-//$order_Name= $row_cust['First_Name'];
-/* $order_LastN = $row_cust['Last_Name'];
 
 $get_order = "Select Order_Num,Payment_Type From order WHERE customer_id='$cust_id' Group By Order_Date DESC LIMIT 1";
 $run_ordernum = mysqli_query($con,$get_order);
@@ -32,21 +21,37 @@ $apt= $row_address['Apt_Number'];
 $city = $row_address['City'];
 $state = $row_address['State'];
 $zip = $row_address['Zip'];
- */
+ 
+
+$user = $_SESSION['customer_id'];
+
+$get_cust = "SELECT customer_id,name,lastname,email, address_id, city, country, state, street1, street2, zip, payment_id 
+FROM customer NATURAL JOIN shipping_address NATURAL JOIN payment_method
+WHERE customer_id = '$user'";
+
+$run_cust = mysqli_query($con,$get_cust);
+
+$row_cust = mysqli_fetch_array($run_cust);
+
+$cust_id = $row_cust['customer_id'];
+
+$cust_first = $row_cust['name'];
+$cust_last = $row_cust['lastname'];
+$cust_email = $row_cust['email'];
+$cust_paymentID = $row_cust['payment_id'];
+$cust_addressID = $row_cust['address_id'];
+
 
 foreach($_SESSION["cart_array"] as $each_item) 
 {
     $item_id = $each_item["item_id"];
-    $get_item = "select brand_name,sale_price from product p, brand b where product_id='$item_id' AND (p.product_id = b.brand_id)";
+    $get_item = "select brand_name,sale_price from product, brand  where product_id='$item_id'";
     $run_item = mysqli_query($con,$get_item);
 
     while($row_item=mysqli_fetch_array($run_item))
     {
         $item_name = $row_item['brand_name'];
         $item_price = $row_item['sale_price'];
-       // echo "Lo que está en item_price: $item_price";
-        //echo "Lo que está en item_name: $item_name";
-
     }
 
     $total_price = $item_price * $each_item['quantity'];
@@ -197,7 +202,7 @@ foreach($_SESSION["cart_array"] as $each_item)
             
             <tr class="heading">
                 <td>
-                    Payment Method
+                    Ship To: 
                 </td>
                 
             </tr>
@@ -234,8 +239,8 @@ foreach($_SESSION["cart_array"] as $each_item)
                                     foreach ($_SESSION["cart_array"] as $each_item) {
                         $item_id = $each_item["item_id"];
                         $get_item = "
-                        SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url  FROM product p, brand b, weight w, grain g
-                        WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1 AND image_url IS NOT NULL AND product_id='$item_id'";
+                        SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url  FROM product p, brand b, weight w, grain g
+                        WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1 AND image_url IS NOT NULL AND product_id='$item_id'";
                         $run_item = mysqli_query($con,$get_item);
 
                         while($row_item=mysqli_fetch_array($run_item)){
@@ -269,7 +274,7 @@ foreach($_SESSION["cart_array"] as $each_item)
                                    
                     ";
                                         
-                                        $get_qty = "select quantity_stock from product p, brand b where product_id='$item_id' AND (p.product_id = b.brand_id)";
+                                        $get_qty = "select quantity_stock from product where product_id='$item_id'";
                                         $run_qty = mysqli_query($con,$get_qty);
                                         $row_qty = mysqli_fetch_array($run_qty);
 

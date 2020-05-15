@@ -1,14 +1,9 @@
 <!DOCTYPE html>
 <?php
 
-session_start();
-
-require_once ('php/CreateDb.php');
+include "conection.php";
 require_once ('./php/component.php');
-
-
-// create instance of Createdb class
-$database = new CreateDb("Productdb", "Producttb");
+session_start();
 
 if (isset($_POST['add'])){
     if(isset($_SESSION['cart'])){
@@ -76,21 +71,51 @@ if (isset($_POST['add'])){
 <!--Nav-->
 	<?php require_once ("php/header.php"); ?>
 	<!--Nav end-->
+<?php
+
+if(!isset($_SESSION['customer_id'])){
+    echo "<script>alert('You must log-in to see Profile!')</script>";
+    echo "<script>window.open('./Login_v14/index.php','_self')</script>";
+}
+
+        //query customer
+       $customer = $_SESSION['customer_id'];//Save Customer ID
+                                        //Query Search Customer
+        $query_customer =  "SELECT *
+                            FROM customer
+                            WHERE customer_id = '$customer'";
+        $r = mysqli_query($con,$query_customer);//Make the Query
+        $row = mysqli_fetch_array($r);//Save Query Result
+?>
 
 		<div class="profile-card">
 			<div class="image-container">
-				<img src="user.jpg" style="width: 100%">
 				<div class="title">
-					<h2>Pepe Gonzales</h2>
+					<h2><?php echo $row['name'];echo (" "); echo $row['lastname']; ?></h2>
 				</div>
-			</div>
+            </div>
+            <?php
+            //Query Address
+            $query_address = "SELECT *
+                         FROM shipping_address
+                         WHERE customer_id = '$customer'";
+            $r2 = mysqli_query($con,$query_address);//Make the Query
+            $row2 = mysqli_fetch_array($r2);//Save Query Result
+            ?>
 			<div class="main-container">
-                <p>ID: 09854</p>
-                <p>Tel: 123-456-7897</p>
-				<p>Address: Km. 0.8, PR-653, Arecibo, PR, 00612</p>
-				<p>Email: default.email@email.com</p>
+                <p>ID: <?php echo $_SESSION['customer_id'];?></p>
+                <p>Street1: <?php echo $row2['street1'];?></p>
+                <p>Street2: <?php echo $row2['street2'];?></p>
+                <p>City: <?php echo $row2['city'];?></p>
+                <p>State: <?php echo $row2['state'];?></p>
+                <p>Zip: <?php echo $row2['zip'];?></p>
+                <p>Country: <?php echo $row2['country'];?></p>
+				<p>Email: <?php echo $row['email']; ?></p>
 				
 			</div>
+            <form method = "post" action='editProfile.php'>
+            <button type="submit" name="customer_id" value= $custumer_id >Edit Profile</button>
+            </form>
 		</div>
 	
 

@@ -54,8 +54,8 @@ require_once ('./php/component.php');
       global $con;
         if (isset($_GET['item_id'])){
             $items_ID = $_GET['item_id'];
-            $get_items = "SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url  FROM product p, brand b, weight w, grain g
-            WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1 AND product_id = '$items_ID'";
+            $get_items = "SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url  FROM product p, brand b, weight w, grain g
+            WHERE (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1 AND product_id = '$items_ID'";
         
            
         $run_items = mysqli_query($con, $get_items);

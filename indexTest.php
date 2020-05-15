@@ -60,10 +60,10 @@ require_once ('./php/component.php');
         <?php
 
           //Query Products
-           $query = "SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url
-            FROM product p, brand b, weight w, grain g
-            WHERE (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1
-            ORDER BY brand_name";
+           $query = "SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url, quantity_sold
+            FROM product p natural join brand b natural join weight w natural join grain g
+            WHERE (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1 AND image_url IS NOT NULL
+            ORDER BY quantity_sold DESC";
 
 
                                             
@@ -78,6 +78,7 @@ require_once ('./php/component.php');
                     $item_pic = $row['image_url'];
                     $item_remain = $row['quantity_stock'];
                     $item_description = $row['description'];
+                    $item_weight = $row['weight_oz'];
 
                   print "
                   <div class='col-md-4 col-sm-6 col-xs-6'>
@@ -89,7 +90,7 @@ require_once ('./php/component.php');
 											</div>
 											<div class='product-body'>
 												<h3 class='product-price'>Price: $$item_price</h3>
-												<h3 class='product-name'><a href='product-single.php?item_id=$item_id'>$item_name</a></h3>
+												<h3 class='product-name'><a href='product-single.php?item_id=$item_id'>$item_name, $item_weight oz</a></h3>
 												<div>
 												  <button><a href='product-single.php?item_id=$item_id'> View Product </a></button>
 												</div>

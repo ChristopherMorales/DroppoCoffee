@@ -48,6 +48,15 @@ session_start();
 
 <form action="checkout.php" method="post" class="clearfix">
 
+                <?php
+					if(!isset($_SESSION['customer_id'])){
+						echo "<script>alert('You must log-in to checkout!')</script>";
+						echo "<script>window.open('./Login_v14/index.php','_self')</script>";
+					}
+					?>
+
+             
+
             <div class="col-md-12">
 						<div class="order-summary clearfix">
 							<div class="section-title">
@@ -84,7 +93,8 @@ session_start();
                     $wasFound = False;
                     $i = 0;
                     // if there is no cart session or if the cart is empty 
-                    if(!isset($_SESSION["cart_array"]) || count($_SESSION["cart_array"]) < 1) {
+                    if(!isset($_SESSION["cart_array"]) || count($_SESSION["cart_array"]) < 1) 
+                    {
                         $_SESSION["cart_array"] = array(0 => array("item_id" => $item_id,"quantity" => 1 ));
                     }
                     else{
@@ -153,12 +163,13 @@ session_start();
 
                     $cart_total = 0;
                     $i = 0;
-                    foreach ($_SESSION["cart_array"] as $each_item) {
+                    foreach ($_SESSION["cart_array"] as $each_item) 
+                    {
                         $item_id = $each_item["item_id"];
                         $get_item = "
-                            SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url  
-                            FROM product p, brand b, weight w, grain g 
-                            WHERE product_id ='$item_id' AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1 AND image_url IS NOT NULL";
+                            SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url  
+                            FROM product p NATURAL JOIN brand b NATURAL JOIN weight w NATURAL JOIN grain g 
+                            WHERE product_id ='$item_id' AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1 AND image_url IS NOT NULL";
                         $run_item = mysqli_query($con,$get_item);
 
                         while($row_item=mysqli_fetch_array($run_item)){
@@ -172,8 +183,25 @@ session_start();
                         $cart_total = $total_price + $cart_total;
                         $qty_item = $each_item['quantity'];
 
+                        //Calcula tax in Order Review Table
                         $tax = $total_price * 0.115;
+                        $tax = round($tax,2);
                         $total_tax += $tax;
+
+
+
+                /*         $value = isset($_POST['item']) ? $_POST['item'] : 1; //to be displayed
+                        if(isset($_POST['incqty']))
+                        {
+                        $qty_item += 1;
+                        }
+
+                        if(isset($_POST['decqty']))
+                        {
+                        $qty_item -= 1;                                            
+                        } */
+
+
                         
                     echo "<tr>
                     <td class='col-sm-8 col-md-6'>
@@ -186,6 +214,8 @@ session_start();
                     </div></td>
                     <td class='col-sm-1 col-md-1' style='text-align: center'>
                         <input type='text' class='form-control' id='qty' value='$qty_item'>
+                    </form>
+  
                     </td>
                     <td></td>
                     <td class='col-sm-1 col-md-1 text-center'><strong>$$item_price</strong></td>
@@ -251,6 +281,54 @@ session_start();
 
     </div>
 </div>
+
+
+    <div class="card">
+        <div class="card-header">
+            <strong>Checkout</strong>
+            <small> Form</small>
+        </div>
+        <div class="card-body card-block">
+            <div class="form-group">
+                <label for="street" class=" form-control-label">Street</label>
+                <input type="text" id="adr" name="streetname" value="" required><br>
+            </div>
+            <div class="form-group">
+                <label for="apartment" class=" form-control-label">Apt Number</label>
+                <input type="text" id="adr" name="apt" value="" required><br>
+            </div>
+            <div class="form-group">
+                <label for="city" class=" form-control-label">City</label>
+                <input type="text" id="city" name="city" value="" required> <br>
+            </div>
+            <div class="row form-group">
+                <div class="col-8">
+                    <div class="form-group">
+                        <label for="state" class=" form-control-label">State</label>
+                        <input type="text" id="state" name="state" value="" required><br>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div class="form-group">
+                        <label for="zip-code" class=" form-control-label">Zip Code</label>
+                        <input type="text" id="zip" name="zip" value="" required><br>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+            
+            <label>Payment Type</label><select name="payment_type" id="payment_type" required>
+                <option value="" selected="selected">Select a Payment type: </option>
+                <option value="Paypal">Paypal</option>
+                <option value="CC">Credit Card</option>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
 </form>
 
 

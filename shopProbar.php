@@ -85,8 +85,8 @@ include "conection.php";
                 <select name="sortList" id="sortList" value = "highest">
                     <option value='highest'>Price: Highest First</option>
                     <option value='lowest'>Price: Lowest First</option> 
-                    <option value='AtoZ'>Name: A to Z</option> 
-                    <option value='ZtoA'>Name: Z to A</option> 
+                    <option value='AtoZ'>Brand: A to Z</option> 
+                    <option value='ZtoA'>Brand: Z to A</option> 
 
                 </select>
                 <input type="submit" value="sort" name ="sortBtn"/>
@@ -105,29 +105,29 @@ include "conection.php";
 				if ($selected == 'highest')
 				{
           $get_items = "
-          SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url  FROM product p, brand b, weight w, grain g
-WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1 AND image_url IS NOT NULL
+          SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url  FROM product p, brand b, weight w, grain g
+WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1 AND image_url IS NOT NULL
 ORDER BY `p`.`sale_price`  DESC";
 				}
 				else if ($selected == 'lowest')
 				{
 					$get_items = "
-          SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url  FROM product p, brand b, weight w, grain g
-WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1 AND image_url IS NOT NULL
+          SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url  FROM product p, brand b, weight w, grain g
+WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1 AND image_url IS NOT NULL
 ORDER BY `p`.`sale_price` ASC";
         }
         else if($selected == 'AtoZ')
         {
           $get_items = "
-          SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url  FROM product p, brand b, weight w, grain g
-WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1 AND image_url IS NOT NULL
+          SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url  FROM product p, brand b, weight w, grain g
+WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1 AND image_url IS NOT NULL
 ORDER BY b.brand_name ASC";
         }
         else if($selected == 'ZtoA')
         {
           $get_items = "
-          SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url  FROM product p, brand b, weight w, grain g
-WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1 AND image_url IS NOT NULL
+          SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url  FROM product p, brand b, weight w, grain g
+WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1 AND image_url IS NOT NULL
 ORDER BY b.brand_name DESC";
         }
  
@@ -200,8 +200,8 @@ ORDER BY b.brand_name DESC";
     else{
 
       $get_items = "
-      SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, avaible, image_url  FROM product p, brand b, weight w, grain g
-WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND avaible = 1 AND image_url IS NOT NULL";
+      SELECT product_id, brand_name, description, weight_oz, grain_type, sale_price, quantity_stock, available, image_url  FROM product p, brand b, weight w, grain g
+WHERE (p.brand_id = b.brand_id) AND (p.brand_id = b.brand_id) AND (p.weight_id = w.weight_id) AND (p.grain_id = g.grain_id) AND available = 1 AND image_url IS NOT NULL";
 
       $run_items = mysqli_query($con, $get_items);
       while($row_items=mysqli_fetch_array($run_items))
