@@ -1,0 +1,13 @@
+img{
+    max-width: 100%;
+    height: auto;
+    background-color: blue;
+    background: radial-gradient(white 30%, gray 70%);
+}
+
+.header {
+    padding: 60px;
+    text-align: center;
+    color: black (204, 194, 194);
+    font-size: 30px;
+  }
